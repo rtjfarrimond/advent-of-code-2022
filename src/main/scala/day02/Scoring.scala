@@ -2,16 +2,17 @@ package day02
 
 object Scoring:
 
-  def scoreGame(game: Game): Int =
-    val outcome = Outcome.ofGame(game)
-    val yourMove = game.yourMove
+  def score(outcome: Outcome, yourMove: Move): Int =
     Scoring.scoreRps(yourMove) + Scoring.scoreOutcome(outcome)
 
-  private def scoreRps(rps: RPS): Int =
+  def scoreGame(game: Game): Int =
+    score(Outcome.ofGame(game), game.yourMove)
+
+  private def scoreRps(rps: Move): Int =
     rps match
-      case RPS.Rock => 1
-      case RPS.Paper => 2
-      case RPS.Scissors => 3
+      case Move.Rock => 1
+      case Move.Paper => 2
+      case Move.Scissors => 3
 
   private def scoreOutcome(outcome: Outcome): Int =
     outcome match

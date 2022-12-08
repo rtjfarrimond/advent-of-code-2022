@@ -10,3 +10,10 @@ object Outcome:
     if (game.opponentMove == game.yourMove) Draw
     else if (game.opponentMove.beats == game.yourMove) Lose
     else Win
+
+  def fromChar(char: Char): Option[Outcome] =
+    char match
+      case 'X' => Some(Lose)
+      case 'Y' => Some(Draw)
+      case 'Z' => Some(Win)
+      case _ => None
