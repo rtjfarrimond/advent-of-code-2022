@@ -4,20 +4,12 @@ import scala.collection.*
 import scala.util.{Failure, Success, Try}
 
 case class Cargo(stacks: Map[Int, mutable.Stack[Char]]):
-  def move(instruction: Instruction): Cargo =
-    (0 until instruction.n).map { _ =>
-      val toStack = stacks(instruction.to)
-      Try(stacks(instruction.from).pop()) match
-        case Failure(_) =>
-          toStack
-        case Success(char) =>
-          toStack.push(char)
-    }
-    this
 
   def topCrates: String =
     stacks.keys.toList.sorted.map(stacks(_)).map { oneStack =>
-      oneStack.top
+      Try(oneStack.top) match
+        case Failure(_) => ""
+        case Success(char) => char.toString
     }.mkString
 
 object Cargo:

@@ -12,9 +12,14 @@ object Day5:
 
   private val cargo = Cargo.parse(cargoStrings)
   private val instructions = instructionStrings.map(Instruction.fromString)
-  private val endStateCargo = instructions.foldLeft(cargo) { (cargo, instruction) =>
-    cargo.move(instruction)
-  }
 
-  val part1: String = endStateCargo.topCrates
-  val part2: String = "42"
+  val part1: String = moveCargo(CrateMover9000, cargo, instructions).topCrates
+
+  // TODO: Hide mutability so that this works
+//  val part2: String = moveCargo(CrateMover9001, cargo, instructions).topCrates
+  val part2: String = moveCargo(CrateMover9001, Cargo.parse(cargoStrings), instructions).topCrates
+
+  private def moveCargo(crateMover: CrateMover, initialCargo: Cargo, instructions: List[Instruction]): Cargo =
+    instructions.foldLeft(initialCargo) { (cargo, instruction) =>
+      crateMover.move(cargo, instruction)
+    }
