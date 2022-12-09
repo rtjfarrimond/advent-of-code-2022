@@ -2,8 +2,6 @@ package day05
 
 import munit.FunSuite
 
-import scala.collection._
-
 class CargoTest extends FunSuite:
 
   private val input = List(
@@ -14,10 +12,10 @@ class CargoTest extends FunSuite:
   )
 
   test("Cargo.parse") {
-    val expectedStacks = Map[Int, mutable.Stack[Char]](
-      1 -> mutable.Stack.empty[Char].push('Z', 'N'),
-      2 -> mutable.Stack.empty[Char].push('M', 'C', 'D'),
-      3 -> mutable.Stack.empty[Char].push('P')
+    val expectedStacks = Map[Int, List[Char]](
+      1 -> List('Z', 'N'),
+      2 -> List('M', 'C', 'D'),
+      3 -> List('P')
     )
 
     assertEquals(Cargo.parse(input), Cargo(expectedStacks))

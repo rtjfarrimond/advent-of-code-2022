@@ -1,31 +1,33 @@
 package day05
 
 import scala.annotation.tailrec
-import scala.util.{Failure, Success, Try}
 
 private sealed trait CrateMover:
   def move(cargo: Cargo, instruction: Instruction): Cargo
 
 object CrateMover9000 extends CrateMover:
   override def move(cargo: Cargo, instruction: Instruction): Cargo =
-    (0 until instruction.n).map { _ =>
-      val toStack = cargo.stacks(instruction.to)
-      Try(cargo.stacks(instruction.from).pop()) match
-        case Failure(_) =>
-          toStack
-        case Success(char) =>
-          toStack.push(char)
+    (1 to instruction.n).foldLeft(cargo) { (acc, _) =>
+      acc.stacks(instruction.from).lastOption match
+        case None =>
+          acc
+        case Some(char) =>
+          val newToStack = acc.stacks(instruction.to) appended char
+          val newFromStack = acc.stacks(instruction.from).dropRight(1)
+          Cargo {
+            acc.stacks
+              .updated(instruction.from, newFromStack)
+              .updated(instruction.to, newToStack)
+          }
     }
-    cargo
 
 object CrateMover9001 extends CrateMover:
   override def move(cargo: Cargo, instruction: Instruction): Cargo =
-    val crates = (0 until instruction.n).foldLeft(List.empty[Char]) { (acc, _) =>
-      Try(cargo.stacks(instruction.from).pop()) match
-        case Failure(_) =>
-          acc
-        case Success(char) =>
-          acc prepended char
+    val cratesToMove = cargo.stacks(instruction.from).takeRight(instruction.n)
+    val newFromStack = cargo.stacks(instruction.from).dropRight(instruction.n)
+    val newToStack = cargo.stacks(instruction.to) ::: cratesToMove
+    Cargo {
+      cargo.stacks
+        .updated(instruction.from, newFromStack)
+        .updated(instruction.to, newToStack)
     }
-    cargo.stacks(instruction.to).pushAll(crates)
-    cargo
