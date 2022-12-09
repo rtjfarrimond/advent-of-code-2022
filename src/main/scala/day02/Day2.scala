@@ -1,6 +1,6 @@
 package day02
 
-@main def day02: Unit =
+@main def day02(): Unit =
   println(s"Part 1: ${Day2.part1}")
   println(s"Part 2: ${Day2.part2}")
 
