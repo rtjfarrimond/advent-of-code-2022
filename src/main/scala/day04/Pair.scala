@@ -3,7 +3,9 @@ package day04
 case class Pair(range1: Range, range2: Range) {
   private val set1 = range1.toSet
   private val set2 = range2.toSet
-  val contained: Boolean = (set1 intersect set2).size == scala.math.min(set1.size, set2.size)
+  private val intersection = set1 intersect set2
+  val contained: Boolean = intersection.size == scala.math.min(set1.size, set2.size)
+  val overlap: Boolean = intersection.size > 0
 }
 
 private object Pair:

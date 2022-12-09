@@ -11,5 +11,5 @@ object Day4:
 
   val part1: Int = pairs.count(_.contained)
 
-  val part2: Int = 42
+  val part2: Int = pairs.count(_.overlap)
 
