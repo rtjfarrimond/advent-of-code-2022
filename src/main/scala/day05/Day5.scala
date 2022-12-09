@@ -7,8 +7,14 @@ package day05
 object Day5:
 
   private val input = scala.io.Source.fromResource("day05.txt").getLines().toList
+  private val cargoStrings = input.takeWhile(_ != "")
+  private val instructionStrings = input.dropWhile(_ != "").tail
 
-  case class Instruction(n: Int, from: Int, to: Int)
+  private val cargo = Cargo.parse(cargoStrings)
+  private val instructions = instructionStrings.map(Instruction.fromString)
+  private val endStateCargo = instructions.foldLeft(cargo) { (cargo, instruction) =>
+    cargo.move(instruction)
+  }
 
-  val part1: String = "42"
+  val part1: String = endStateCargo.topCrates
   val part2: String = "42"

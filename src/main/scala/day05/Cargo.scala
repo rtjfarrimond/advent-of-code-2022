@@ -1,14 +1,24 @@
 package day05
 
-import Day5.Instruction
-import scala.collection._
+import scala.collection.*
+import scala.util.{Failure, Success, Try}
 
 case class Cargo(stacks: Map[Int, mutable.Stack[Char]]):
   def move(instruction: Instruction): Cargo =
     (0 until instruction.n).map { _ =>
-      stacks(instruction.to).push(stacks(instruction.from).pop())
+      val toStack = stacks(instruction.to)
+      Try(stacks(instruction.from).pop()) match
+        case Failure(_) =>
+          toStack
+        case Success(char) =>
+          toStack.push(char)
     }
     this
+
+  def topCrates: String =
+    stacks.keys.toList.sorted.map(stacks(_)).map { oneStack =>
+      oneStack.top
+    }.mkString
 
 object Cargo:
   // Assumes well-formed input

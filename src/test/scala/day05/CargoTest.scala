@@ -1,9 +1,8 @@
 package day05
 
-import Day5.Instruction
 import munit.FunSuite
 
-import scala.collection.*
+import scala.collection._
 
 class CargoTest extends FunSuite:
 
@@ -46,4 +45,8 @@ class CargoTest extends FunSuite:
     )
 
     assertEquals(initialStack.move(instruction).stacks, expectedStacks)
+  }
+
+  test("Cargo.topCrates") {
+    assertEquals(Cargo.parse(input).topCrates, "NDP")
   }

@@ -7,5 +7,5 @@ class Day5Test extends munit.FunSuite:
     }
 
     test("part 2".ignore) {
-        assertEquals(Day5.part2, ???)
+        assertEquals(Day5.part2, "MCD")
     }
