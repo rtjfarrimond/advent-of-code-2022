@@ -4,16 +4,18 @@ import Path._
 
 case class DirectoryMetadata(totalSize: Long, contents: Set[Path])
 
-case class FileSystem(workingDirectory: Directory, database: Map[Directory, DirectoryMetadata]) {
+case class FileSystem(workingDirectory: Directory, database: Map[Directory, DirectoryMetadata], totalSpace: Long) {
+
+  val remainingSpace: Long = totalSpace - database(Root).totalSize
 
   def interpret(instruction: Instruction): FileSystem =
     instruction match
       case Instruction.Cd("/") =>
-        FileSystem(Root, database)
+        FileSystem(Root, database, totalSpace)
       case Instruction.Cd("..") =>
-        FileSystem(workingDirectory.parent, database)
+        FileSystem(workingDirectory.parent, database, totalSpace)
       case Instruction.Cd(target) =>
-        FileSystem(Dir(workingDirectory, target), database)
+        FileSystem(Dir(workingDirectory, target), database, totalSpace)
       case Instruction.Ls(subDirNames, fileDescriptors) =>
         val subDirs: Set[Directory] = subDirNames.map(Dir(workingDirectory, _))
         val files = fileDescriptors.map { fd =>
@@ -25,7 +27,7 @@ case class FileSystem(workingDirectory: Directory, database: Map[Directory, Dire
         val updatedDatabase = recordsToUpsert.foldLeft(database) { (db, record) =>
           db.updated(record._1, record._2)
         }
-        FileSystem(workingDirectory, updatedDatabase)
+        FileSystem(workingDirectory, updatedDatabase, totalSpace)
 
   private def getRecordsToUpsert(ancestors: Set[Directory], subDirs: Set[Directory], totalFileSize: Long): Set[(Directory, DirectoryMetadata)] = {
     val inserts = subDirs.map { sd =>
@@ -41,5 +43,5 @@ case class FileSystem(workingDirectory: Directory, database: Map[Directory, Dire
 }
 
 object FileSystem {
-  def empty = FileSystem(Root, Map(Root -> DirectoryMetadata(0, Set.empty)))
+  def empty(totalSpace: Long) = FileSystem(Root, Map(Root -> DirectoryMetadata(0, Set.empty)), totalSpace)
 }
