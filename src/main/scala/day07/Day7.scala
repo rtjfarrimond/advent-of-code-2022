@@ -10,8 +10,12 @@ object Day7:
 
   private val input = scala.io.Source.fromResource("day07.txt").getLines().toList
   private val instructions = Instruction.parse(input)
+  private val fileSystem = instructions.foldLeft(FileSystem.empty) { (fs, instruction) =>
+    fs.interpret(instruction)
+  }
+  private val candidates = fileSystem.database.filter { (_, metadata) =>
+    metadata.totalSize <= 100000L
+  }
 
-  instructions.foreach(println)
-
-  val part1: Long = 42L
+  val part1: Long = candidates.values.map(_.totalSize).sum
   val part2: Long = 42L
